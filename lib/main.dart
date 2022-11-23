@@ -1,4 +1,7 @@
+import 'package:coin_ticker/price_screen.dart';
 import 'package:flutter/material.dart';
+import 'themes.dart';
+import 'price_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,9 +10,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp();
+    return MaterialApp(
+      theme: customTheme(),
+      home: const PriceScreen(),
+    );
   }
 }
