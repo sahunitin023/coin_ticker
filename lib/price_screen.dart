@@ -13,10 +13,15 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String selectedCurrency = 'USD';
+  String selectedCurrency = 'INR';
   int? btcPrice;
   int? ethPrice;
   int? ltcPrice;
+  @override
+  void initState() {
+    updateUI(selectedCurrency);
+    super.initState();
+  }
 
   void updateUI(String currency) async {
     NetworkHelper btcURL = NetworkHelper(
@@ -161,8 +166,8 @@ class _PriceScreenState extends State<PriceScreen> {
                 onChanged: (value) {
                   setState(() {
                     selectedCurrency = value.toString();
+                    updateUI(selectedCurrency);
                   });
-                  updateUI(selectedCurrency);
                 },
               ),
             ),

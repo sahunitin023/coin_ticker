@@ -1,7 +1,6 @@
 import 'package:coin_ticker/price_screen.dart';
 import 'package:flutter/material.dart';
 import 'themes.dart';
-import 'price_screen.dart';
 
 void main() {
   runApp(const MyApp());
