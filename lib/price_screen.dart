@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'coin_data.dart';
+import 'data.dart';
+
+const apiKey = "3933E60D-EF0C-4654-B169-4A86576CE522";
 
 class PriceScreen extends StatefulWidget {
   const PriceScreen({Key? key}) : super(key: key);
@@ -11,6 +14,35 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
+  int? btcPrice;
+  int? ethPrice;
+  int? ltcPrice;
+
+  void updateUI(String currency) async {
+    NetworkHelper btcURL = NetworkHelper(
+        "https://rest.coinapi.io/v1/exchangerate/BTC/$currency?apikey=$apiKey");
+    dynamic btcData = await btcURL.getData();
+    double btc = btcData['rate'];
+    NetworkHelper ethURL = NetworkHelper(
+        "https://rest.coinapi.io/v1/exchangerate/ETH/$currency?apikey=$apiKey");
+    dynamic ethData = await ethURL.getData();
+    double eth = ethData['rate'];
+    NetworkHelper ltcURL = NetworkHelper(
+        "https://rest.coinapi.io/v1/exchangerate/LTC/$currency?apikey=$apiKey");
+    dynamic ltcData = await ltcURL.getData();
+    double ltc = ltcData['rate'];
+    setState(() {
+      if (btcData == null || ethData == null || ltcData == null) {
+        btcPrice = 0;
+        ethPrice = 0;
+        ltcPrice = 0;
+      }
+      btcPrice = btc.toInt();
+      ethPrice = eth.toInt();
+      ltcPrice = ltc.toInt();
+    });
+  }
+
   List<DropdownMenuItem<String>> dropDownItemList() {
     List<DropdownMenuItem<String>> dropDownItems = [];
     for (int i = 0; i < currenciesList.length; i++) {
@@ -51,15 +83,14 @@ class _PriceScreenState extends State<PriceScreen> {
                 children: [
                   Expanded(
                     child: Card(
-                      elevation: 10.0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       color: ksecondaryColour,
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          '1 BTC = 285 EUR',
-                          style: TextStyle(
+                          '1 BTC = $btcPrice $selectedCurrency',
+                          style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
                           ),
@@ -72,15 +103,14 @@ class _PriceScreenState extends State<PriceScreen> {
                   ),
                   Expanded(
                     child: Card(
-                      elevation: 10.0,
                       color: ksecondaryColour,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          '1 BTC = 285 EUR',
-                          style: TextStyle(
+                          '1 ETH = $ethPrice $selectedCurrency',
+                          style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
                           ),
@@ -93,15 +123,14 @@ class _PriceScreenState extends State<PriceScreen> {
                   ),
                   Expanded(
                     child: Card(
-                      elevation: 10.0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       color: ksecondaryColour,
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          '1 BTC = 285 EUR',
-                          style: TextStyle(
+                          '1 LTC = $ltcPrice $selectedCurrency',
+                          style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
                           ),
@@ -126,14 +155,14 @@ class _PriceScreenState extends State<PriceScreen> {
                   fontSize: 20.0,
                 ),
                 menuMaxHeight: 375.0,
-                elevation: 10,
-                dropdownColor: Colors.teal,
+                dropdownColor: Colors.white,
                 value: selectedCurrency,
                 items: dropDownItemList(),
                 onChanged: (value) {
                   setState(() {
                     selectedCurrency = value.toString();
                   });
+                  updateUI(selectedCurrency);
                 },
               ),
             ),
